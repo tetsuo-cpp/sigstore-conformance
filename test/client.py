@@ -7,6 +7,7 @@ CERTIFICATE_IDENTITY = (
     + os.environ["GITHUB_REPOSITORY"]
     + "/.github/workflows/conformance.yml@"
     + os.environ["GITHUB_REF"]
+    + "foobar"
 )
 CERTIFICATE_OIDC_ISSUER = "https://token.actions.githubusercontent.com"
 
