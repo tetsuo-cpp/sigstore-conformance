@@ -15,6 +15,12 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Check permissions
+      if: github.event_name == 'pull_request_target' && !contains(github.event.pull_request.labels.*.name, 'safe to test')
+      run: |
+        echo "This pull request is not tagged with the 'safe to test' label"
+        exit 1
+
     - name: Set up sigstore-conformance
       run: |
         # NOTE: Sourced, not executed as a script.
@@ -23,7 +29,6 @@ runs:
 
     - name: Run sigstore-conformance
       id: sigstore-conformance
-      if: github.event_name != 'pull_request_target' || contains(github.event.pull_request.labels.*.name, 'safe to test')
       run: |
         ${{ github.action_path }}/action.py
       env:
