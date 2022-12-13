@@ -20,6 +20,7 @@ runs:
       run: |
         echo "This pull request is not tagged with the 'safe to test' label"
         exit 1
+      shell: bash
 
     - name: Set up sigstore-conformance
       run: |
