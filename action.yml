@@ -23,6 +23,7 @@ runs:
 
     - name: Run sigstore-conformance
       id: sigstore-conformance
+      if: github.event.action != 'pull_request_target' || contains(github.event.pull_request.labels.*.name, 'safe to test')
       run: |
         ${{ github.action_path }}/action.py
       env:
