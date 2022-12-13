@@ -8,7 +8,7 @@ sigstore-conformance
 
 `sigstore-conformance` is a conformance testing suite for Sigstore clients.
 
-Make an edit so I can test a PR.
+Make another edit so I can test a PR.
 
 ## Usage
 
