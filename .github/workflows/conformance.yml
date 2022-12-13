@@ -5,6 +5,7 @@ on:
     branches:
       - main
   pull_request_target:
+    types: [labeled]
   workflow_dispatch:
 
 jobs:
@@ -19,5 +20,6 @@ jobs:
       - name: conformance test sigstore-python
         uses: ./
         id: sigstore-conformance
+        if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'safe to test')
         with:
           entrypoint: ${{ github.workspace }}/sigstore-python-conformance
