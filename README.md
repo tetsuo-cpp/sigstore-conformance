@@ -6,7 +6,7 @@ sigstore-conformance
 ![Self-test](https://github.com/trailofbits/sigstore-conformance/workflows/Self-test/badge.svg)
 <!--- @end-badges@ --->
 
-`sigstore-conformance` is a conformance testing suite for Sigstore clients.
+`sigstore-conformance` is a conformance testing suite for Sigstore clients. :)
 
 This suite provides a high-level view of client behaviour as a whole and sets
 out to answer questions such as:
