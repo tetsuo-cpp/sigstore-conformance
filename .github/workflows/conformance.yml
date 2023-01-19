@@ -12,6 +12,7 @@ jobs:
   selftest:
     permissions:
       id-token: write
+      checks: write
     runs-on: ubuntu-latest
     steps:
       - name: GitHub API Request
