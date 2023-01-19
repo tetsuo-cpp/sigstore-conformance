@@ -32,7 +32,7 @@ jobs:
         id: create_check_run
         with:
           route: POST /repos/{repo}/check-runs
-          repo: ${{ GITHUB_REPOSITORY }}
+          repo: ${{ steps.pr_data.outputs.repo_name }}
           name: "Test check run"
           head_sha: ${{ steps.pr_data.outputs.branch }}
           output: | # The | is significant!
