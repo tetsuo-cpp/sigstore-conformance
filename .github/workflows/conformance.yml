@@ -28,6 +28,16 @@ jobs:
           echo "::set-output name=repo_name::${{ fromJson(steps.request.outputs.data).base.repo.full_name }}"
           echo "::set-output name=repo_clone_url::${{ fromJson(steps.request.outputs.data).base.repo.clone_url }}"
           echo "::set-output name=repo_ssh_url::${{ fromJson(steps.request.outputs.data).base.repo.ssh_url }}"
+      - uses: octokit/request-action@v2.x
+        id: create_check_run
+        with:
+          route: POST /repos/{repo}/check-runs
+          repo: ${{ GITHUB_REPOSITORY }}
+          name: "Test check run"
+          head_sha: ${{ steps.pr_data.outputs.branch }}
+          output: | # The | is significant!
+            title: Test check run title
+            summary: A summary of the test check run
       - name: clone branch of PR
         uses: actions/checkout@v2
         with:
