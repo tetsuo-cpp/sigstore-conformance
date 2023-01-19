@@ -14,14 +14,6 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: install sigstore-python
-        run: pip install sigstore
-      - name: conformance test sigstore-python
-        uses: ./
-        id: sigstore-conformance
-        with:
-          entrypoint: ${{ github.workspace }}/sigstore-python-conformance
       - name: GitHub API Request
         id: request
         uses: octokit/request-action@v2.0.0
@@ -41,3 +33,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ steps.pr_data.outputs.branch }}
+      - name: install sigstore-python
+        run: pip install sigstore
+      - name: conformance test sigstore-python
+        uses: ./
+        id: sigstore-conformance
+        with:
+          entrypoint: ${{ github.workspace }}/sigstore-python-conformance
