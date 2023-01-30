@@ -60,6 +60,6 @@ jobs:
           route: PATCH /repos/{repo}/check-runs/{check_run_id}
           repo: ${{ steps.pr_data.outputs.repo_name }}
           check_run_id: ${{ fromJson(steps.create_check_run.outputs.data).id }}
-          status: completed
+          conclusion: success
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
