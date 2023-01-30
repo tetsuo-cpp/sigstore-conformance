@@ -39,6 +39,7 @@ jobs:
           output: | # The | is significant!
             title: Test check run title
             summary: A summary of the test check run
+          status: in_progress
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: clone branch of PR
@@ -53,3 +54,12 @@ jobs:
         id: sigstore-conformance
         with:
           entrypoint: ${{ github.workspace }}/sigstore-python-conformance
+      - uses: octokit/request-action@v2.x
+        id: update_check_run
+        with:
+          route: PATCH /repos/{repo}/check-runs/{check_run_id}
+          repo: ${{ steps.pr_data.outputs.repo_name }}
+          check_run_id: ${{ steps.create_check_run.outputs.id }}
+          status: completed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
