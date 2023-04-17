@@ -7,6 +7,9 @@ inputs:
     description: "the command to invoke the Sigstore client"
     required: true
     default: ""
+  github-token:
+    required: true
+    default: ""
   internal-be-careful-debug:
     description: "run with debug logs (default false)"
     required: false
@@ -34,5 +37,6 @@ runs:
         ${{ github.action_path }}/action.py
       env:
         GHA_SIGSTORE_CONFORMANCE_ENTRYPOINT: "${{ inputs.entrypoint }}"
+        GHA_SIGSTORE_CONFORMANCE_GITHUB_TOKEN: "${{ inputs.github-token }}"
         GHA_SIGSTORE_CONFORMANCE_INTERNAL_BE_CAREFUL_DEBUG: "${{ inputs.internal-be-careful-debug }}"
       shell: bash

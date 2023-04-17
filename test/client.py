@@ -20,20 +20,21 @@ class SigstoreClient:
     adheres to the protocol outlined at `docs/cli_protocol.md`.
     """
 
-    def __init__(self, entrypoint: str) -> None:
+    def __init__(self, entrypoint: str, identity_token: str) -> None:
         """
         Create a new `SigstoreClient`.
 
         `entrypoint` is the command to invoke the Sigstore client.
         """
         self.entrypoint = entrypoint
+        self.identity_token = identity_token
 
     def run(self, *args) -> None:
         """
         Execute a command against the Sigstore client.
         """
         subprocess.run(
-            [self.entrypoint, *args],
+            [self.entrypoint, *args, "--identity-token", self.identity_token],
             text=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,

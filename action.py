@@ -21,6 +21,57 @@ _DEBUG = (
 _ACTION_PATH = Path(os.getenv("GITHUB_ACTION_PATH"))  # type: ignore
 
 
+# TODO(alex): Figure out where to put this.
+def _get_oidc_token(gh_token: str):
+    from io import BytesIO
+    from zipfile import ZipFile
+
+    import requests
+
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Authorization": f"Bearer {gh_token}",
+    }
+
+    session = requests.Session()
+
+    resp = session.get(
+        url="https://api.github.com/repos/tetsuo-cpp/sigstore-conformance-oidc/actions/workflows/"
+        "54271711/runs",
+        headers=headers,
+    )
+    resp.raise_for_status()
+    resp_json = resp.json()
+    workflow = resp_json["workflow_runs"][0]
+    run_id = workflow["id"]
+
+    resp = session.get(
+        url="https://api.github.com/repos/tetsuo-cpp/sigstore-conformance-oidc/actions"
+        f"/runs/{run_id}/artifacts",
+        headers=headers,
+    )
+    resp.raise_for_status()
+    resp_json = resp.json()
+    artifacts = resp_json["artifacts"]
+    assert len(artifacts) == 1
+    oidc_artifact = artifacts[0]
+    assert oidc_artifact["name"] == "oidc-token"
+    artifact_id = oidc_artifact["id"]
+
+    resp = session.get(
+        url="https://api.github.com/repos/tetsuo-cpp/sigstore-conformance-oidc/actions"
+        f"/artifacts/{artifact_id}/zip",
+        headers=headers,
+    )
+    resp.raise_for_status()
+    artifact_zip = ZipFile(BytesIO(resp.content))
+    artifact = artifact_zip.open("oidc-token.txt")
+
+    # NOTE(alex): Seems to be a newline here.
+    return artifact.read().decode()[:-1]
+
+
 def _template(name):
     path = _TEMPLATES / f"{name}.md"
     return string.Template(path.read_text())
@@ -57,6 +108,11 @@ if _DEBUG:
 entrypoint = os.getenv("GHA_SIGSTORE_CONFORMANCE_ENTRYPOINT")
 if entrypoint:
     sigstore_conformance_args.extend(["--entrypoint", entrypoint])
+
+gh_token = os.getenv("GHA_SIGSTORE_CONFORMANCE_GITHUB_TOKEN")
+if gh_token:
+    oidc_token = _get_oidc_token(gh_token)
+    sigstore_conformance_args.extend(["--identity-token", oidc_token])
 
 _debug(f"running: sigstore-conformance {[str(a) for a in sigstore_conformance_args]}")
 
