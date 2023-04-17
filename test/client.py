@@ -34,7 +34,7 @@ class SigstoreClient:
         Execute a command against the Sigstore client.
         """
         subprocess.run(
-            [self.entrypoint, *args, "--identity-token", self.identity_token],
+            [self.entrypoint, *args],
             text=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
@@ -52,7 +52,14 @@ class SigstoreClient:
         `certificate` is the path to write the signing certificate to.
         """
         self.run(
-            "sign", "--signature", signature, "--certificate", certificate, artifact
+            "sign",
+            "--identity-token",
+            self.identity_token,
+            "--signature",
+            signature,
+            "--certificate",
+            certificate,
+            artifact,
         )
 
     def verify(

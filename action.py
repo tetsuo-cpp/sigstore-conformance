@@ -92,7 +92,7 @@ def _log(msg):
 
 
 def _sigstore_conformance(*args):
-    return ["pytest", *args, _ACTION_PATH / "test"]
+    return ["pytest", _ACTION_PATH / "test", *args]
 
 
 def _fatal_help(msg):
