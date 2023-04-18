@@ -40,7 +40,7 @@ def _get_oidc_token(gh_token: str):
     while workflow_time is None or datetime.now() - workflow_time >= timedelta(
         minutes=5
     ):
-        if workflow_time is None:
+        if workflow_time is not None:
             _debug("Couldn't find a recent token, waiting...")
             import time
 
