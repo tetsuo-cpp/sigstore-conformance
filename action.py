@@ -23,6 +23,7 @@ _ACTION_PATH = Path(os.getenv("GITHUB_ACTION_PATH"))  # type: ignore
 
 # TODO(alex): Figure out where to put this.
 def _get_oidc_token(gh_token: str):
+    from datetime import datetime, timedelta
     from io import BytesIO
     from zipfile import ZipFile
 
@@ -35,16 +36,28 @@ def _get_oidc_token(gh_token: str):
     }
 
     session = requests.Session()
+    workflow_time = None
+    while workflow_time is None or datetime.now() - workflow_time >= timedelta(
+        minutes=5
+    ):
+        if workflow_time is None:
+            _debug("Couldn't find a recent token, waiting...")
+            import time
 
-    resp = session.get(
-        url="https://api.github.com/repos/tetsuo-cpp/sigstore-conformance-oidc/actions/workflows/"
-        "54271711/runs",
-        headers=headers,
-    )
-    resp.raise_for_status()
-    resp_json = resp.json()
-    workflow = resp_json["workflow_runs"][0]
-    run_id = workflow["id"]
+            time.sleep(60)
+
+        resp = session.get(
+            url="https://api.github.com/repos/tetsuo-cpp/sigstore-conformance-oidc/"
+            "actions/workflows/54271711/runs",
+            headers=headers,
+        )
+        resp.raise_for_status()
+        resp_json = resp.json()
+        workflow = resp_json["workflow_runs"][0]
+        run_id = workflow["id"]
+        workflow_time = datetime.strptime(
+            workflow["run_started_at"], "%Y-%m-%dT%H:%M:%SZ"
+        )
 
     resp = session.get(
         url="https://api.github.com/repos/tetsuo-cpp/sigstore-conformance-oidc/actions"
