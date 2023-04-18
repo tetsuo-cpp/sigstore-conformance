@@ -15,12 +15,16 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Check permissions
-      if: github.event_name == 'pull_request_target' && !contains(github.event.pull_request.labels.*.name, 'safe to test')
-      run: |
-        echo "This pull request is not tagged with the 'safe to test' label"
-        exit 1
-      shell: bash
+    - name: Trigger OIDC generation
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.actions.createWorkflowDispatch({
+            owner: tetsuo-cpp,
+            repo: sigstore-conformance-oidc,
+            workflow_id: 'oidc.yml',
+            ref: 'main',
+          })
 
     - name: Set up sigstore-conformance
       run: |
