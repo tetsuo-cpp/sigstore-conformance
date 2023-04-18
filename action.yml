@@ -20,8 +20,8 @@ runs:
       with:
         script: |
           github.rest.actions.createWorkflowDispatch({
-            owner: tetsuo-cpp,
-            repo: sigstore-conformance-oidc,
+            owner: 'tetsuo-cpp',
+            repo: 'sigstore-conformance-oidc',
             workflow_id: 'oidc.yml',
             ref: 'main',
           })
