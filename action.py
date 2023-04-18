@@ -54,6 +54,8 @@ def _get_oidc_token(gh_token: str):
         resp.raise_for_status()
         resp_json = resp.json()
         workflow = resp_json["workflow_runs"][0]
+        if workflow["status"] != "completed":
+            continue
         run_id = workflow["id"]
         workflow_time = datetime.strptime(
             workflow["run_started_at"], "%Y-%m-%dT%H:%M:%SZ"
