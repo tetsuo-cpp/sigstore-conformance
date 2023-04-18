@@ -2,11 +2,8 @@ import os
 import subprocess
 
 CERTIFICATE_IDENTITY = (
-    os.environ["GITHUB_SERVER_URL"]
-    + "/"
-    + os.environ["GITHUB_REPOSITORY"]
-    + "/.github/workflows/conformance.yml@"
-    + os.environ["GITHUB_REF"]
+    "https://github.com/tetsuo-cpp/sigstore-conformance-oidc/"
+    ".github/workflows/oidc.yml@refs/heads/main"
 )
 CERTIFICATE_OIDC_ISSUER = "https://token.actions.githubusercontent.com"
 
